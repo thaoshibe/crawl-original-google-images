@@ -2,6 +2,9 @@
 
 ---
 
+### Overview
+
+Download original (not thumbnails) from Google Images Search with **multi-threading** :D
 1. Get URLs by keywords
 
 ```
@@ -16,5 +19,6 @@
 
 ### Checklists
 - [x] Init
+- [x] Multithreading
 - [ ] Requiremets
 - [ ] Write Guideline
