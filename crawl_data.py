@@ -1,15 +1,17 @@
-from bs4 import BeautifulSoup
-import urllib.request as rq_url
-from PIL import Image
-import requests
-from io import BytesIO
-import matplotlib.pyplot as plt
-from tqdm import tqdm as tqdm
-import numpy as np
-import os, glob
 import csv
+import glob
+import os
 import urllib.parse
+import urllib.request as rq_url
+from io import BytesIO
 from multiprocessing.dummy import Pool as ThreadPool
+
+# import matplotlib.pyplot as plt
+import numpy as np
+import requests
+from bs4 import BeautifulSoup
+from PIL import Image
+from tqdm import tqdm as tqdm
 
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 headers={'User-Agent':user_agent,} 
@@ -64,6 +66,3 @@ if __name__ == '__main__':
 	pool = ThreadPool(12)
 	for _ in tqdm(pool.imap_unordered(get_img, list_csv), total=len(list_csv)):
 		pass
-
-	
-	

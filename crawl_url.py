@@ -1,26 +1,25 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from bs4 import BeautifulSoup
-import sys
-
+import argparse
+import datetime
 import json
 import os
-import argparse
+import sys
+import time
+import urllib
+from multiprocessing.dummy import Pool as ThreadPool
 
 import requests
-import urllib
 import urllib3
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from tqdm import tqdm as tqdm
 from urllib3.exceptions import InsecureRequestWarning
 
-import datetime
-import time
-from tqdm import tqdm as tqdm
-from multiprocessing.dummy import Pool as ThreadPool
 urllib3.disable_warnings(InsecureRequestWarning)
 
 maxcount = 1000
 path = '/home/kimtuthap97/Documents/synthesis'
-chromedriver = '/home/kimtuthap97/Documents/synthesis/chromedriver_linux64/chromedriver'
+chromedriver = '/home/thaontp79/works/crawl-original-google-images/chromedriver_linux64/chromedriver'
 
 def download_google_staticimages(searchword1):
 
