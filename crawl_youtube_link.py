@@ -1,4 +1,5 @@
 import argparse
+import csv
 import datetime
 import json
 import os
@@ -45,19 +46,11 @@ def set_up_chrome(searchurl):
     browser.find_elements_by_xpath("//*[contains(text(), 'HD')]")[0].click()
     time.sleep(1)
     element = browser.find_element_by_tag_name('body')
+
     for i in range(50):
         element.send_keys(Keys.PAGE_DOWN)
         time.sleep(0.3)
 
-    try:
-        browser.find_element_by_id('smb').click()
-        for i in range(50):
-            element.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.3)
-    except:
-        for i in range(10):
-            element.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.3)
     page_source = browser.page_source 
     # print(f'Reached end of page.')
     time.sleep(0.5)
@@ -68,6 +61,8 @@ def download_youtube_urls(searchword1):
     dirs = searchword1
     if not os.path.join(path, dirs):
         os.mkdir(os.path.join(path, dirs))
+
+    # normal words
     searchurl = 'https://www.youtube.com/results?search_query=' + searchword1
 
     browser, page_source = set_up_chrome(searchurl)
@@ -76,14 +71,24 @@ def download_youtube_urls(searchword1):
 
     urls = []
     for video in tqdm(videos):
-        # import pdb; pdb.set_trace()
         try:
             url = video['href']
             if '/watch?v' in url:
                 urls.append(url)
-                # print(url)
         except Exception as e:
-            # print(e)
+            pass
+
+    browser, page_source = set_up_chrome(searchurl + ' interview')
+    soup = BeautifulSoup(page_source, 'lxml')
+    videos = soup.find_all('a')
+
+    # urls = []
+    for video in tqdm(videos):
+        try:
+            url = video['href']
+            if '/watch?v' in url:
+                urls.append(url)
+        except Exception as e:
             pass
     urls = np.unique(urls)
     with open("/home/thaontp79/works/datasets/youtube-celeb/urls/{}.txt".format(searchword1), "w") as txt_file:
@@ -93,10 +98,16 @@ def download_youtube_urls(searchword1):
 
 # Main block
 def main():
-    list_keywords=['Gilbert Gottfried', 'Joseph Gatt', 'Alexander Skarsgård',
-                'Simone Ashley', 'Nicola Peltz Beckham', 'Amber Heard',
-                'Oscar Isaac', 'Emma Mackey', 'Jonathan Bailey',
-                'May Calamawy']
+    # list_keywords=['Gilbert Gottfried', 'Joseph Gatt', 'Alexander Skarsgård',
+    #             'Simone Ashley', 'Nicola Peltz Beckham', 'Amber Heard',
+    #             'Oscar Isaac', 'Emma Mackey', 'Jonathan Bailey',
+    #             'May Calamawy']
+    ijbc_file = '/home/thaontp79/works/datasets/youtube-celeb/ijbc_subject_names.csv'
+    with open(ijbc_file, newline='') as f:
+        reader = csv.reader(f)
+        list_names = list(reader)
+    list_keywords = [x[1] for x in list_names[1:]]
+
     pool = ThreadPool(4)
     for _ in tqdm(pool.imap_unordered(download_youtube_urls, list_keywords), total=len(list_keywords)):
         pass
