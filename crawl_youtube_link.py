@@ -62,39 +62,44 @@ def download_youtube_urls(searchword1):
     if not os.path.join(path, dirs):
         os.mkdir(os.path.join(path, dirs))
 
+    urls = []
     # normal words
     searchurl = 'https://www.youtube.com/results?search_query=' + searchword1
 
-    browser, page_source = set_up_chrome(searchurl)
-    soup = BeautifulSoup(page_source, 'lxml')
-    videos = soup.find_all('a')
+    try:
+        browser, page_source = set_up_chrome(searchurl)
+        soup = BeautifulSoup(page_source, 'lxml')
+        videos = soup.find_all('a')
 
-    urls = []
-    for video in tqdm(videos):
-        try:
-            url = video['href']
-            if '/watch?v' in url:
-                urls.append(url)
-        except Exception as e:
-            pass
+        for video in videos:
+            try:
+                url = video['href']
+                if '/watch?v' in url:
+                    urls.append(url)
+            except Exception as e:
+                pass
 
-    browser, page_source = set_up_chrome(searchurl + ' interview')
-    soup = BeautifulSoup(page_source, 'lxml')
-    videos = soup.find_all('a')
+        browser, page_source = set_up_chrome(searchurl + ' interview')
+        soup = BeautifulSoup(page_source, 'lxml')
+        videos = soup.find_all('a')
 
-    # urls = []
-    for video in tqdm(videos):
-        try:
-            url = video['href']
-            if '/watch?v' in url:
-                urls.append(url)
-        except Exception as e:
-            pass
+        # urls = []
+        for video in tqdm(videos):
+            try:
+                url = video['href']
+                if '/watch?v' in url:
+                    urls.append(url)
+            except Exception as e:
+                pass
+        browser.close()
+    except Exception as e:
+        print(e, searchword1)
+        pass
     urls = np.unique(urls)
+
     with open("/home/thaontp79/works/datasets/youtube-celeb/urls/{}.txt".format(searchword1), "w") as txt_file:
         for line in urls:
             txt_file.write("".join(line) + "\n")
-    browser.close()
 
 # Main block
 def main():
