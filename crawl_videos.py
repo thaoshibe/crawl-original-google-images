@@ -38,14 +38,18 @@ def download(txt_file, output_path='.', download_video=False, metadata=False, th
 	for folder in [save_video_dir, metadata_dir, thumb_dir]:
 		if not os.path.isdir(folder):
 			os.makedirs(folder)
+	downloaded_thumbnails = os.listdir(thumb_dir)
+	downloaded_thumbnails = [x.split('.')[0] for x in downloaded_thumbnails]
 
 	with open(txt_file, newline='') as f:
 	    reader = csv.reader(f)
 	    list_urls = list(reader)
 
+	list_urls = [x for x in list_urls if x[0].split('=')[-1] not in downloaded_thumbnails]
 	for url in list_urls:
 		try:
 			# print('Dowloadin: ', url)
+			# import pdb; pdb.set_trace()
 			url = 'https://www.youtube.com'+url[0]
 			video = pafy.new(url)
 			if download_video:

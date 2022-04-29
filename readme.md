@@ -36,6 +36,7 @@ Download original (not thumbnails) from Google Images Search with **multi-thread
 1. Download videos from URLs
 	```
 	python crawl_videos.py
+	python crawl_videos.py --metadata --thumbnail # thumbnail and metadata only
 	```
 
 ##### To-do
